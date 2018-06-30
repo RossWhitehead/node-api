@@ -9,35 +9,40 @@ const accountsCollection = 'accounts';
 const transactionsCollection = 'transactions';
 
 module.exports.getCustomers = function(callback) {
-    getAll(customersCollection, callback);
+    findAll(customersCollection, query, callback);
 };
 
 module.exports.getCustomer = function(id, callback) {
-    getById(customersCollection, id, callback);
+    findOneById(customersCollection, id, callback);
 };
 
 module.exports.getAccounts = function(callback) {
-    getAll(accountsCollection, callback);
+    findAll(accountsCollection, callback);
 };
 
 module.exports.getAccount = function(id, callback) {
-    getById(accountsCollection, id, callback);
+    findOneById(accountsCollection, id, callback);
+};
+
+module.exports.getAccountForCustomer = function(customerId, callback) {
+    var query = { customerId: customerId };
+    find(accountsCollection, query, callback);
 };
 
 module.exports.getTransactions = function(callback) {
-    getAll(transactionsCollection, callback);
+    findAll(transactionsCollection, callback);
 };
 
 module.exports.getTransaction = function(id, callback) {
-    getById(transactionsCollection, id, callback);
+    findOneById(transactionsCollection, id, callback);
 };
 
-function getAll(collectionName, callback) {
+function find(collectionName, query, callback) {
     MongoClient.connect(url, function (err, client) {
         if (err)
             return callback(err, null);
         const db = client.db(dbName);
-        db.collection(collectionName).find({}).toArray(function (err, result) {
+        db.collection(collectionName).find(query).toArray(function (err, result) {
             if (err)
                 return callback(err, null);
             client.close();
@@ -46,7 +51,12 @@ function getAll(collectionName, callback) {
     });
 }
 
-function getById(collectionName, id, callback) {
+function findAll(collectionName, callback){
+    var query = {};
+    find(collectionName, query, callback);
+}
+
+function findOneById(collectionName, id, callback) {
     MongoClient.connect(url, function (err, client) {
         if (err)
             return callback(err, null);

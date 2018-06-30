@@ -21,64 +21,52 @@ server.listen(8080, function() {
     console.log('%s listening at %s', server.name, server.url);
 });
   
+// Route handlers
 function getCustomers(req, res, next) {
     dataContext.getCustomers(function(err, data){
-        if(err) return next(err);
-        console.log(data);
-        res.send(data);
-        next();
+        parseResults(err, data, res, next);
     });
 }
 
 function getCustomer(req, res, next) {
     dataContext.getCustomer(req.params.id, function(err, data){
-        if(err) return next(err);
-        console.log(data);
-        res.send(data);
-        next();
+        parseResults(err, data, res, next);
     });
 }
 
 function getAccounts(req, res, next) {
     dataContext.getAccounts(function(err, data){
-        if(err) return next(err);
-        console.log(data);
-        res.send(data);
-        next();
+        parseResults(err, data, res, next);
     });
 }
 
 function getAccount(req, res, next) {
     dataContext.getAccount(req.params.id, function(err, data){
-        if(err) return next(err);
-        console.log(data);
-        res.send(data);
-        next();
+        parseResults(err, data, res, next);
     });
 }
 
 function getAccountsForCustomer(req, res, next) {
-    if(req.params.id === '2') {
-        return next(new errors.NotFoundError('customer not found'));
-    }
-    res.send('accounts for customer ' + req.params.id);
-    next();
+    dataContext.getAccountForCustomer(req.params.id, function(err, data){
+        parseResults(err, data, res, next);
+    });
 }
 
 function getTransactions(req, res, next) {
     dataContext.getTransactions(function(err, data){
-        if(err) return next(err);
-        console.log(data);
-        res.send(data);
-        next();
+        parseResults(err, data, res, next);
     });
 }
 
 function getTransaction(req, res, next) {
     dataContext.getTransaction(req.params.id, function(err, data){
-        if(err) return next(err);
-        console.log(data);
-        res.send(data);
-        next();
+        parseResults(err, data, res, next);
     });
+}
+
+function parseResults(err, data, res, next){
+    if(err) return next(err);
+    console.log(data);
+    res.send(data);
+    next();
 }
