@@ -6,6 +6,8 @@ var server = restify.createServer();
 
 server.pre(restify.plugins.pre.userAgentConnection());
 
+server.use(restify.plugins.queryParser());
+
 // Routes
 server.get('/customers', getCustomers)
 server.get('/customers/:id', getCustomer)
@@ -53,7 +55,8 @@ function getAccountsForCustomer(req, res, next) {
 }
 
 function getTransactions(req, res, next) {
-    dataContext.getTransactions(function(err, data){
+    console.log(req.query);
+    dataContext.getTransactions(req.query.from, req.query.to, function(err, data){
         parseResults(err, data, res, next);
     });
 }

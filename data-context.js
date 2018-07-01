@@ -9,7 +9,7 @@ const accountsCollection = 'accounts';
 const transactionsCollection = 'transactions';
 
 module.exports.getCustomers = function(callback) {
-    findAll(customersCollection, query, callback);
+    findAll(customersCollection, callback);
 };
 
 module.exports.getCustomer = function(id, callback) {
@@ -25,12 +25,25 @@ module.exports.getAccount = function(id, callback) {
 };
 
 module.exports.getAccountForCustomer = function(customerId, callback) {
-    var query = { customerId: customerId };
+    const query = { customerId: customerId };
     find(accountsCollection, query, callback);
 };
 
-module.exports.getTransactions = function(callback) {
-    findAll(transactionsCollection, callback);
+module.exports.getTransactions = function(from, to, callback) {
+    console.log(from);
+    console.log(to);
+    if(from === undefined && to === undefined) findAll(transactionsCollection, callback);
+    else{
+        if(from === undefined) from = '1970-01-01T00:00:00Z';
+        else if (to == undefined) to = '2100-01-01T00:00:00Z';
+        const query = {
+            createdOn: {
+                $gte: from,
+                $lt: to
+            }
+        };       
+        find(transactionsCollection, query, callback);
+    }    
 };
 
 module.exports.getTransaction = function(id, callback) {
@@ -39,7 +52,7 @@ module.exports.getTransaction = function(id, callback) {
 
 function find(collectionName, query, callback) {
     MongoClient.connect(url, function (err, client) {
-        if (err)
+        if (err) 
             return callback(err, null);
         const db = client.db(dbName);
         db.collection(collectionName).find(query).toArray(function (err, result) {
@@ -52,7 +65,7 @@ function find(collectionName, query, callback) {
 }
 
 function findAll(collectionName, callback){
-    var query = {};
+    const query = {};
     find(collectionName, query, callback);
 }
 
@@ -62,7 +75,6 @@ function findOneById(collectionName, id, callback) {
             return callback(err, null);
         const db = client.db(dbName);
         db.collection(collectionName).findOne({ _id: ObjectID.createFromHexString(id) }, function (err, result) {
-            console.log('result:' + result);
             if (err)
                 return callback(err, null);
             client.close();
