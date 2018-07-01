@@ -3,6 +3,18 @@ version: '3.1'
 
 services:
 
+  node:
+    image: "node:8"
+    user: "node"
+    working_dir: /usr/source/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./:/usr/source/app
+    expose:
+      - "8081"
+    command: "npm start"
+
   mongo:
     image: mongo
     restart: always
