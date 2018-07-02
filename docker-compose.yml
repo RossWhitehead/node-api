@@ -4,7 +4,7 @@ version: '3.1'
 services:
 
   node:
-    image: "node:8"
+    image: "node:10"
     user: "node"
     working_dir: /usr/source/app
     environment:
@@ -12,7 +12,9 @@ services:
     volumes:
       - ./:/usr/source/app
     expose:
-      - "8081"
+      - "8080"
+    ports:
+      - 8080:8080
     command: "npm start"
 
   mongo:
@@ -28,7 +30,8 @@ services:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - 8181:8181
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example     
+      VCAP_APP_PORT: 8181 

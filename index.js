@@ -1,5 +1,4 @@
 var restify = require('restify')
-var errors = require('restify-errors')
 var dataContext = require('./data-context');
 
 var server = restify.createServer();

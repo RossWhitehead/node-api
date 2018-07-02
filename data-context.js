@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
 // Connection URL
-const url = 'mongodb://root:example@localhost';
+const url = 'mongodb://root:example@mongo';
 const dbName = 'test';
 const customersCollection = 'customers';
 const accountsCollection = 'accounts';
