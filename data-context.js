@@ -2,8 +2,8 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 
 // Connection URL
-const url = 'mongodb://root:example@mongo';
-const dbName = 'test';
+const url = 'mongodb://root:example@localhost';
+const dbName = 'speedlayer';
 const customersCollection = 'customers';
 const accountsCollection = 'accounts';
 const transactionsCollection = 'transactions';
@@ -29,17 +29,15 @@ module.exports.getAccountForCustomer = function(customerId, callback) {
     find(accountsCollection, query, callback);
 };
 
-module.exports.getTransactions = function(from, to, callback) {
-    console.log(from);
-    console.log(to);
-    if(from === undefined && to === undefined) findAll(transactionsCollection, callback);
+module.exports.getTransactions = function(fromBookingDateTime, toBookingDateTime, callback) {
+    if(fromBookingDateTime === undefined && toBookingDateTime === undefined) findAll(transactionsCollection, callback);
     else{
-        if(from === undefined) from = '1970-01-01T00:00:00Z';
-        else if (to == undefined) to = '2100-01-01T00:00:00Z';
+        if(fromBookingDateTime === undefined) fromBookingDateTime = '1970-01-01T00:00:00.000Z';
+        else if (toBookingDateTime == undefined) toBookingDateTime = '2100-01-01T00:00:00.000Z';
         const query = {
-            createdOn: {
-                $gte: from,
-                $lt: to
+            BookingDateTime: {
+                $gte: new Date(fromBookingDateTime),
+                $lt: new Date(toBookingDateTime)
             }
         };       
         find(transactionsCollection, query, callback);

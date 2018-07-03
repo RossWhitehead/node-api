@@ -54,8 +54,7 @@ function getAccountsForCustomer(req, res, next) {
 }
 
 function getTransactions(req, res, next) {
-    console.log(req.query);
-    dataContext.getTransactions(req.query.from, req.query.to, function(err, data){
+    dataContext.getTransactions(req.query.fromBookingDateTime, req.query.toBookingDateTime, function(err, data){
         parseResults(err, data, res, next);
     });
 }
@@ -68,7 +67,6 @@ function getTransaction(req, res, next) {
 
 function parseResults(err, data, res, next){
     if(err) return next(err);
-    console.log(data);
     res.send(data);
     next();
 }
